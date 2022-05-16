@@ -1,9 +1,12 @@
 
 ! Port Incunabulum to fortran: https://code.jsoftware.com/wiki/Essays/Incunabulum
 
-! AA TODO: Use fypp instead! https://github.com/aradi/fypp
 ! AA TODO: add fypp and fpm to guix repositories
-#define DOC(n, x) {do concurrent (i=1:n);x; end do;}
+#:def DOC(n, x)
+  do concurrent (i=1:${n}$)
+    ${x}$
+  end do
+#:enddef DOC
 
 program main
   implicit none
@@ -21,11 +24,7 @@ program main
     !print *, b(i)
   end do
 
-  !cpp macro doesn't seem to work
-  DOC(size(a), a(i)= 2 * a(i))
-  do concurrent (i = 1 : size(b))
-    print *, b(i)
-  end do
+  $:DOC('size(b)', 'print *, b(i)')
 
 
 end program main
